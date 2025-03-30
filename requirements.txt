@@ -1,0 +1,15 @@
+requests
+beautifulsoup4
+Pillow
+opencv-python
+numpy
+scipy
+scikit-image
+imagehash
+dictances
+pandas
+tenacity
+tqdm
+scikit-learn
+matplotlib
+pyarrow
