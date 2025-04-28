@@ -26,7 +26,7 @@ The system consists of two main components:
 
 ### 1. Logo Extraction
 
-The system downloads logos from website domains using a `WebsiteLogoExtractor` (not shown in provided code). The extraction process:
+The system downloads logos from website domains using a `WebsiteLogoExtractor`. The extraction process:
 
 - Takes a list of domains from a Parquet file
 - Creates batches to manage load and respect website rate limits
@@ -217,16 +217,7 @@ Community detection has roughly linear complexity
 
 ## Possible improvements
 
-1. Dimensionality Reduction
-
-Current Issue: Computing and storing the full n×n similarity matrix is expensive.
-Improvement:
-
-Implement dimensionality reduction techniques (PCA, t-SNE) to project logos into a lower-dimensional space
-Use approximate nearest neighbor algorithms (Locality-Sensitive Hashing, FAISS) for similarity search
-This could reduce complexity from O(n²) to O(n×log(n))
-
-2. Progressive Refinement
+1. Progressive Refinement
 
 Current Issue: All logos go through the full pipeline of feature extraction and comparison.
 Improvement:
@@ -238,7 +229,7 @@ Second pass: Apply more expensive features only to candidates from first pass
 
 This could reduce the effective complexity by limiting detailed comparisons
 
-3. Incremental Processing
+2. Incremental Processing
 
 Current Issue: The system processes all logos in one batch.
 Improvement:
@@ -247,7 +238,7 @@ Implement incremental clustering that can add new logos to existing clusters
 Store pre-computed features for previously seen logos
 This avoids recomputing the entire similarity matrix when new logos are added
 
-4. Feature Optimization
+3. Feature Optimization
 
 Current Issue: Extracting all features for every logo is computationally expensive.
 Improvement:
@@ -256,16 +247,7 @@ Profile to identify which features provide the most discrimination power
 Potentially drop or simplify less useful features
 Implement early stopping in the similarity calculation when logos are clearly dissimilar
 
-5. Distributed Computing
-
-Current Issue: The system is limited to a single machine.
-Improvement:
-
-Split the similarity matrix computation across multiple machines
-Use MapReduce or similar paradigms for parallel processing
-Consider using cloud services for on-demand scaling
-
-6. Indexing and Caching
+4. Indexing and Caching
 
 Current Issue: Repeated computations for the same logos.
 Improvement:
@@ -274,7 +256,7 @@ Implement a feature cache to store computed features
 Use database indexing for faster similarity lookups
 Consider vector databases specialized for similarity search
 
-7. Better Memory Management
+5. Better Memory Management
 
 Current Issue: Holding all images and the full similarity matrix in memory.
 Improvement:

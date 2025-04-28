@@ -65,40 +65,6 @@ class LogoClusterer:
                 self.logger.info(f"Batch complete. Sleeping {self.delay} seconds")
                 time.sleep(self.delay)  # Add delay between batches
 
-    def _extract_logo_for_url(self, url, extractor):
-        try:
-            if not isinstance(url, str) or not url.strip():
-                return  # Skip invalid URLs
-            url = url.strip()
-            extractor.extract_logo("https://" + url, self.logos_dir)
-        except Exception as e:
-            self.logger.warning(f"Failed to extract logo for {url}: {e}")
-
-    def _downloadLogos(self):
-        extractor = WebsiteLogoExtractor(timeout=0.5, logger=setup_logger('Logo Extractor'))
-        # Create output directory
-        os.makedirs(self.logos_dir, exist_ok=True)
-
-        # Prepare the list of valid URLs
-        urls = [url for url in self.df["domain"] if isinstance(url, str) and url.strip()]
-
-        # Process URLs in batches
-        for i in range(0, len(urls), self.batch_size):
-            batch_urls = urls[i:i + self.batch_size]
-            self.logger.info(f"Processing batch {i//self.batch_size + 1} with {len(batch_urls)} URLs")
-
-            # Extract logos in parallel
-            with concurrent.futures.ThreadPoolExecutor(max_workers=self.workers) as executor:
-                list(tqdm(
-                    executor.map(partial(self._extract_logo_for_url, extractor=extractor), batch_urls),
-                    total=len(batch_urls),
-                    desc=f"Batch {i//self.batch_size + 1}"
-                ))
-
-            if i + self.batch_size < len(urls):
-                self.logger.info(f"Batch complete. Sleeping {self.delay} seconds")
-                time.sleep(self.delay)  # Add delay between batches
-
     def _load_logo_image(self, logo_path):
         """Load a logo image from file path"""
         try:
